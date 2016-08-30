@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_ractangle_border1"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edt_coupan_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:ems="20"
+        android:paddingLeft="10dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:background="@drawable/btn_ractangle_border1"
+        android:hint="@string/coupons_name"/>
+
+    <EditText
+        android:id="@+id/edt_coupan_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginTop="5dp"
+        android:inputType="number"
+        android:singleLine="true"
+        android:digits="0123456789"
+        android:maxLines="1"
+        android:ems="20"
+        android:paddingLeft="10dp"
+        android:background="@drawable/btn_ractangle_border1"
+        android:hint="@string/price"/>
+
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pb_create_cuopan"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+    <Button
+        android:id="@+id/btn_save_coupan"
+        style="@style/btnbeckground"
+        android:layout_margin="10dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="create" />
+        <!--<Button-->
+            <!--style="@style/btnbeckground"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:text="cancle" />-->
+    </LinearLayout>
+
+
+
+</LinearLayout>

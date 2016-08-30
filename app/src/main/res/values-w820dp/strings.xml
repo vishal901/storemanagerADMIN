@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_user_name">User Name</string>
+    <string name="login_password">Password</string>
+    <string name="forgot_username_forgot_password">Forgot Username/Password ?</string>
+    <string name="welcome">WELCOME</string>
+    <string name="to_the">TO THE</string>
+    <string name="ceragem_store">CERAGEM STORE!</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="home">Home</string>
+    <string name="products">Products</string>
+    <string name="coupan">Coupan</string>
+    <string name="order">Order</string>
+    <string name="reports">Reports</string>
+    <string name="logout">Logout</string>
+    <string name="prouct_name">Product Name</string>
+    <string name="price">Price</string>
+    <string name="fname">Frist Name</string>
+    <string name="lname">Last Name</string>
+    <string name="coupons_name">Coupons Name</string>
+    <string name="conf_password">Confirm Password</string>
+    <string name="branch_name">Branch Name</string>
+    <string name="address">Address</string>
+    <string name="customer">Customer</string>
+    <string name="user">USER</string>
+    <string name="branch">Branch</string>
+</resources>

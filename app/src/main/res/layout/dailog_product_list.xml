@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <!--<TextView
+        android:id="@+id/code"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="(91)"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/countryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:text="Country Name"
+        android:textSize="14sp" />-->
+
+    <EditText
+        android:id="@+id/et_search_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="10dp" />
+
+    <ListView
+        android:id="@+id/list_product"
+        android:layout_width="match_parent"
+        android:background="#e6e3e3"
+        android:layout_height="300dp"
+        android:layout_below="@+id/et_search_product"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pb_productlist_data"
+        android:visibility="visible"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        style="@style/btnbeckground"
+        android:id="@+id/btn_save"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/list_product" />
+
+
+</RelativeLayout>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_ractangle_border1"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/edt_add_user_name_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_ractangle_border1"
+        android:ems="20"
+        android:hint="@string/login_user_name"
+        android:lines="1"
+        android:paddingLeft="10dp"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/edt_add_password_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/btn_ractangle_border1"
+        android:ems="20"
+        android:hint="@string/login_password"
+        android:inputType="textPassword"
+        android:lines="1"
+        android:paddingLeft="10dp"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/edt_add_confim_password_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/btn_ractangle_border1"
+        android:ems="20"
+        android:hint="@string/conf_password"
+        android:inputType="textPassword"
+        android:lines="1"
+        android:paddingLeft="10dp"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_ractangle_border1"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/sp_branch_user"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+        </android.support.v7.widget.AppCompatSpinner>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_create_user_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_create_new_user_admin"
+            style="@style/btnbeckground"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:text="create" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_create_new_user_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+</LinearLayout>

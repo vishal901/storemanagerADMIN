@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_ractangle_border1"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/edt_add_branch_name_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_ractangle_border1"
+        android:ems="20"
+        android:hint="@string/branch_name"
+        android:lines="1"
+
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/edt_add_branch_address_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/btn_ractangle_border1"
+        android:gravity="top"
+        android:hint="@string/address"
+        android:lines="4"
+        android:ems="20"
+        android:maxLines="3"
+        android:padding="5dp"
+        android:paddingLeft="10dp"
+        android:textSize="12sp" />
+
+    <ProgressBar
+        android:id="@+id/pb_create_branch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/layout_hide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_create_branch_admin"
+            style="@style/btnbeckground"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:text="create" />
+        <!--<Button-->
+        <!--android:id="@+id/btn_finish_admin"-->
+        <!--style="@style/btnbeckground"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:text="Finish" />-->
+    </LinearLayout>
+
+
+</LinearLayout>
