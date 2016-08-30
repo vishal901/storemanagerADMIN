@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:gravity="left"
             android:text="Coupons Name"
             android:textColor="#FFFFFF"
@@ -36,9 +36,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="left"
-            android:text="Price"
+            android:text="\u0024 Price"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -55,7 +55,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="right"
             android:text="Delete"
             android:textColor="#FFFFFF"

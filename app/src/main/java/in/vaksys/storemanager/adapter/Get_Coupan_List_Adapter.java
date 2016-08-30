@@ -27,11 +27,13 @@ import in.vaksys.storemanager.R;
 import in.vaksys.storemanager.extra.ApiClient;
 import in.vaksys.storemanager.extra.ApiInterface;
 import in.vaksys.storemanager.extra.AppConfig;
+import in.vaksys.storemanager.extra.MyApplication;
 import in.vaksys.storemanager.extra.PreferenceHelper;
 import in.vaksys.storemanager.model.coupan;
 import in.vaksys.storemanager.model.product;
 import in.vaksys.storemanager.model.productdata;
 import in.vaksys.storemanager.response.DeleteCustomer;
+import in.vaksys.storemanager.response.UpdateCoupan;
 import in.vaksys.storemanager.response.UpdateProduct;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +55,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
     private Button btnsavecoupan;
     ProgressBar progressBar;
     private String scoupanname, scoupanprice, branch_id;
+    private MyApplication myApplication;
 
     public Get_Coupan_List_Adapter(Context context, List<coupan> countries) {
         this.countries = countries;
@@ -60,6 +63,9 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
         preferenceHelper = new PreferenceHelper(context, "type");
         apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY, "");
+        branch_id = preferenceHelper.LoadStringPref(AppConfig.PREF_BRANCH_ID, "");
+        myApplication = MyApplication.getInstance();
+        myApplication.createDialog((Activity) context, false);
     }
 
     @Override
@@ -75,7 +81,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
         viewHolder.coupan_no.setText(data.getCoupan_id());
         viewHolder.coupanname.setText(data.getCoupan_name());
-        viewHolder.coupanprice.setText(data.getCoupan_price());
+        viewHolder.coupanprice.setText("\u0024"+data.getCoupan_price());
 
         viewHolder.img_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +127,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dailog_add_coupons);
+        dialog.setContentView(R.layout.dailog_update_coupons);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
@@ -129,6 +135,10 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
         edtcoupanprice = (EditText) dialog.findViewById(R.id.edt_coupan_price);
         btnsavecoupan = (Button) dialog.findViewById(R.id.btn_save_coupan);
         progressBar = (ProgressBar) dialog.findViewById(R.id.pb_create_cuopan);
+
+        edtcoupanname.setText(coupan_name);
+        edtcoupanprice.setText(coupan_price);
+
         btnsavecoupan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,22 +153,22 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
                 scoupanname = edtcoupanname.getText().toString().trim();
                 scoupanprice = edtcoupanprice.getText().toString().trim();
 
-                Update_Coupan_Network_Call(coupan_name, coupan_price, coupan_id, apikey);
+                Update_Coupan_Network_Call(scoupanname, scoupanprice, coupan_id, apikey,branch_id);
             }
         });
 
     }
 
-    private void Update_Coupan_Network_Call(final String scoupanname, final String scoupanprice, final String coupan_id, String apikey) {
+    private void Update_Coupan_Network_Call(final String scoupanname, final String scoupanprice, final String coupan_id, String apikey, String branch_id) {
 
         progressBar.setVisibility(View.VISIBLE);
         btnsavecoupan.setEnabled(false);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<UpdateProduct> updateProductCall  = apiInterface.UPDATE_PRODUCT_RESPONSE_CALL(scoupanname,scoupanprice,branch_id,apikey);
+        Call<UpdateCoupan> updateProductCall  = apiInterface.URL_UPDATE_COUPAN(scoupanname,scoupanprice,coupan_id, branch_id,apikey);
 
-        updateProductCall.enqueue(new Callback<UpdateProduct>() {
+        updateProductCall.enqueue(new Callback<UpdateCoupan>() {
             @Override
-            public void onResponse(Call<UpdateProduct> call, Response<UpdateProduct> response) {
+            public void onResponse(Call<UpdateCoupan> call, Response<UpdateCoupan> response) {
 
                 if (response.code() == 200){
 
@@ -171,7 +181,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
                         countries.remove(mypos);
                         coupan coupanlist = new coupan();
-                        coupanlist.setCoupan_id(branch_id);
+                        coupanlist.setCoupan_id(coupan_id);
                         coupanlist.setCoupan_name(scoupanname);
                         coupanlist.setCoupan_price(scoupanprice);
                         productArrayList.add(coupanlist);
@@ -196,7 +206,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
             }
 
             @Override
-            public void onFailure(Call<UpdateProduct> call, Throwable t) {
+            public void onFailure(Call<UpdateCoupan> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 btnsavecoupan.setEnabled(true);
 
@@ -254,6 +264,8 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
     private void DeleteCoupan_Network_Call(final String id, final int mypos, String apikey) {
 
+        myApplication.DialogMessage("Delete Coupan...");
+        myApplication.showDialog();
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
@@ -270,7 +282,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
                     if (!response.body().isError()) {
 
-
+                        myApplication.hideDialog();
                         countries.remove(mypos);
 
                         notifyDataSetChanged();
@@ -278,12 +290,12 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
 
                     } else {
-
+                        myApplication.hideDialog();
                         Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
-
+                    myApplication.hideDialog();
                     Toast.makeText(context, "Something Worng Data", Toast.LENGTH_SHORT).show();
 
                 }
@@ -292,7 +304,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
 
             @Override
             public void onFailure(Call<DeleteCustomer> call, Throwable t) {
-
+                myApplication.hideDialog();
                 Toast.makeText(context, "No Internet Access", Toast.LENGTH_SHORT).show();
 
             }

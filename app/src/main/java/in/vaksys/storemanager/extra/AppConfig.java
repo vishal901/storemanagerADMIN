@@ -19,6 +19,8 @@ public class AppConfig {
     public static final String URL_UPDATE_PRODUCT = "Product/update_product";
     public static final String URL_ADD_COUPON = "Coupon/create_coupon";
     public static final String URL_DELETE_CUSTOMER = "customer/delete_customer";
+    public static final String URL_DELETE_BRANCH = "Branch/delete_branch";
+    public static final String URL_DELETE_USER = "Branch/delete_branch";
     public static final String URL_DELETE_PRODUCT = "product/delete_product";
     public static final String URL_DELETE_COUPAN = "coupon/delete_coupon";
     public static final String URL_EDIT_CUSTOMER = "customer/update_customer";
@@ -27,6 +29,7 @@ public class AppConfig {
     public static final String URL_ADD_ORDER = "orders/create_order";
     public static final String URL_GET_ORDER_LIST = "orders/get_orders";
     public static final String URL_GET_ORDER_LIST_ID = "orders/get_order_by_id";
+    public static final String URL_UPDATE_COUPAN = "coupon/update_coupon";
 
 
 

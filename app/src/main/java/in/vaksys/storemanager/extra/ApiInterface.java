@@ -7,6 +7,7 @@ import in.vaksys.storemanager.response.CreateBranchAdmin;
 import in.vaksys.storemanager.response.Create_Order;
 import in.vaksys.storemanager.response.DeleteCustomer;
 import in.vaksys.storemanager.response.DeleteProduct;
+import in.vaksys.storemanager.response.DeleteUser;
 import in.vaksys.storemanager.response.FindAs;
 import in.vaksys.storemanager.response.GetAllProduct;
 import in.vaksys.storemanager.response.GetBranchAdmin;
@@ -16,6 +17,7 @@ import in.vaksys.storemanager.response.GetOrederList;
 import in.vaksys.storemanager.response.GetOrederListById;
 import in.vaksys.storemanager.response.HomeData;
 import in.vaksys.storemanager.response.RegisterResponse;
+import in.vaksys.storemanager.response.UpdateCoupan;
 import in.vaksys.storemanager.response.UpdateCustomer;
 import in.vaksys.storemanager.response.UpdateProduct;
 import in.vaksys.storemanager.response.UpdateUser;
@@ -68,8 +70,8 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST(AppConfig.URL_CREATE_USER)
-    Call<UpdateUser> UPDATE_USER_RESPONSE_CALL(@Field("username") String username,
-                                               @Field("password") String password,
+    Call<UpdateUser> UPDATE_USER_RESPONSE_CALL(@Field("id") String username,
+                                               @Field("username") String password,
                                                @Field("branch") String abc,
                                                @Header("Authorization") String auuth);
 
@@ -80,12 +82,20 @@ public interface ApiInterface {
                                                @Field("price") String password,
                                                @Field("branch_id") String abc,
                                                @Header("Authorization") String auuth);
-    @FormUrlEncoded
+      @FormUrlEncoded
     @POST(AppConfig.URL_UPDATE_PRODUCT)
     Call<UpdateProduct> UPDATE_PRODUCT_RESPONSE_CALL(@Field("product_name") String username,
                                                      @Field("price") String password,
                                                      @Field("product_id") String abc,
                                                      @Header("Authorization") String auuth);
+
+    @FormUrlEncoded
+    @POST(AppConfig.URL_UPDATE_COUPAN)
+    Call<UpdateCoupan> URL_UPDATE_COUPAN(@Field("coupon_name") String coupon_name,
+                                         @Field("price") String price,
+                                         @Field("id") String id,
+                                         @Field("branch_id") String branch_id,
+                                         @Header("Authorization") String auuth);
 
 
 
@@ -98,6 +108,11 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST(AppConfig.URL_DELETE_CUSTOMER)
     Call<DeleteCustomer> DELETE_CUSTOMER_CALL(@Field("id") String id,@Header("Authorization") String auuth);
+
+    @FormUrlEncoded
+    @POST(AppConfig.URL_DELETE_USER)
+    Call<DeleteUser> DELETE_USER_CALL(@Field("id") String id, @Header("Authorization") String auuth);
+
 
     @FormUrlEncoded
     @POST(AppConfig.URL_DELETE_COUPAN)

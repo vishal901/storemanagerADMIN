@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,18 +23,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.vaksys.storemanager.R;
 import in.vaksys.storemanager.extra.ApiClient;
 import in.vaksys.storemanager.extra.ApiInterface;
 import in.vaksys.storemanager.extra.AppConfig;
+import in.vaksys.storemanager.extra.MyApplication;
 import in.vaksys.storemanager.extra.PreferenceHelper;
-import in.vaksys.storemanager.model.product;
-import in.vaksys.storemanager.model.productdata;
+import in.vaksys.storemanager.model.branch;
 import in.vaksys.storemanager.model.user;
-import in.vaksys.storemanager.response.DeleteCustomer;
-import in.vaksys.storemanager.response.UpdateProduct;
+import in.vaksys.storemanager.response.DeleteUser;
+import in.vaksys.storemanager.response.GetBranchAdmin;
 import in.vaksys.storemanager.response.UpdateUser;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,19 +59,22 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
     private LinearLayout linearLayout;
     private String sUsername, sPassword, sConfingpasswod;
     private String id;
-
-
+    private MyApplication myApplication;
+    private ArrayList<branch> getbranch;
+    private String branchid;
     public GetStroeManager_Adapter(Context context, List<user> countries) {
         this.countries = countries;
         this.context = context;
 
         preferenceHelper = new PreferenceHelper(context, "type");
         apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY, "");
+        myApplication = MyApplication.getInstance();
+        myApplication.createDialog((Activity) context, false);
     }
 
     @Override
     public GetStroeManager_Adapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.set_product, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.set_user, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -98,7 +103,7 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
                 id = data.getId_user();
                 mypos = viewHolder.getAdapterPosition();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setTitle("Sure Want to Delete this Product??")
+                alertDialogBuilder.setTitle("Sure Want to Delete this User??")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int ids) {
@@ -126,21 +131,25 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
                 ApiClient.showLog("product id", data.getId_user());
                 mypos = viewHolder.getAdapterPosition();
 
-                update_Product(data.getId_user(), apikey, mypos, data.getUsername(), data.getUserbranch());
+                //// TODO: 8/30/2016 update store manager reming
+              // update_user(data.getId_user(), apikey, mypos, data.getUsername(), data.getUserbranch());
             }
         });
     }
 
     private void DeleteUser_Network_Call(String id, final int mypos, String apikey) {
 
+        myApplication.DialogMessage("Delete User..");
+        myApplication.showDialog();
+
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         //// TODO: 8/29/2016 change delete user class
-        Call<DeleteCustomer> deleteCustomerCall = apiInterface.DELETE_CUSTOMER_CALL(id, apikey);
+        Call<DeleteUser> deleteCustomerCall = apiInterface.DELETE_USER_CALL(id, apikey);
 
-        deleteCustomerCall.enqueue(new Callback<DeleteCustomer>() {
+        deleteCustomerCall.enqueue(new Callback<DeleteUser>() {
             @Override
-            public void onResponse(Call<DeleteCustomer> call, Response<DeleteCustomer> response) {
+            public void onResponse(Call<DeleteUser> call, Response<DeleteUser> response) {
 
                 ApiClient.showLog("code", "" + response.code());
 
@@ -148,7 +157,7 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
 
                     if (!response.body().isError()) {
 
-
+                        myApplication.hideDialog();
                         countries.remove(mypos);
 
                         notifyDataSetChanged();
@@ -156,12 +165,12 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
 
 
                     } else {
-
+                        myApplication.hideDialog();
                         Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
-
+                    myApplication.hideDialog();
                     Toast.makeText(context, "Something Worng Data", Toast.LENGTH_SHORT).show();
 
                 }
@@ -169,8 +178,8 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
             }
 
             @Override
-            public void onFailure(Call<DeleteCustomer> call, Throwable t) {
-
+            public void onFailure(Call<DeleteUser> call, Throwable t) {
+                myApplication.hideDialog();
                 Toast.makeText(context, "No Internet Access", Toast.LENGTH_SHORT).show();
 
             }
@@ -199,13 +208,15 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
     }
 
 
-    private void update_Product(final String user_id, final String apikey, final int mypos, String user_name, String user_password) {
+    private void update_user(final String user_id, final String apikey, final int mypos, String user_name, String branch) {
 
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dailog_update_user);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+
+        Get_All_Branch(apikey);
 
 
         spBranchUser = (AppCompatSpinner) dialog.findViewById(R.id.sp_branch_user_update);
@@ -216,6 +227,8 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
         progressBar = (ProgressBar) dialog.findViewById(R.id.pb_create_new_user_admin_update);
         linearLayout = (LinearLayout) dialog.findViewById(R.id.layout_create_user_admin_update);
 
+
+        edtUserName.setText(user_name);
 
         btn_user_update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,7 +245,7 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
                 sPassword = edtPassword.getText().toString().trim();
                 sConfingpasswod = edtConfimPassword.getText().toString().trim();
 
-                Update_User_Network_Call(sUsername, sPassword, apikey, mypos);
+                Update_User_Network_Call(sUsername, sPassword, apikey, mypos,branchid,user_id);
 
 
             }
@@ -240,12 +253,12 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
     }
 
     //// TODO: 8/29/2016 update user
-    private void Update_User_Network_Call(String sUsername, String sPassword, String apikey, int mypos) {
+    private void Update_User_Network_Call(final String sUsername, String sPassword, String apikey, int mypos, final String branchid, String user_id) {
 
         progressBar.setVisibility(View.VISIBLE);
        // btnsaveproduct.setEnabled(false);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<UpdateUser> updateProductCall  = apiInterface.UPDATE_USER_RESPONSE_CALL(sUsername,sPassword,"",apikey);
+        Call<UpdateUser> updateProductCall  = apiInterface.UPDATE_USER_RESPONSE_CALL(user_id,sUsername,branchid,apikey);
 
         updateProductCall.enqueue(new Callback<UpdateUser>() {
             @Override
@@ -259,6 +272,10 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
                     if (!response.body().isError()){
 
                         Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        user userdata = new user();
+                        userdata.setUsername(sUsername);
+                        userdata.setUserbranch(branchid);
 //
 //                        productdata.remove(mypos);
 //                        product productlist = new product();
@@ -323,7 +340,74 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
         }
     }
 
+    private void Get_All_Branch(String apikey) {
 
+        myApplication.DialogMessage("Loading Branch...");
+        myApplication.showDialog();
+
+
+       ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<GetBranchAdmin> getBranchAdminCall = apiInterface.GET_BRANCH_ADMIN_CALL(apikey);
+
+        getBranchAdminCall.enqueue(new Callback<GetBranchAdmin>() {
+                                       @Override
+                                       public void onResponse(Call<GetBranchAdmin> call, final Response<GetBranchAdmin> response) {
+
+                                           ApiClient.showLog("code", "" + response.code());
+                                           if (response.code() == 200) {
+                                               myApplication.hideDialog();
+
+                                               List<GetBranchAdmin.BranchBean> as = response.body().getBranch();
+                                               if (!response.body().isError()) {
+                                                   getbranch = new ArrayList<branch>();
+
+                                                   for (GetBranchAdmin.BranchBean a : as) {
+
+                                                       branch getbranchadd = new branch();
+                                                       getbranchadd.setId_branch(a.getId());
+                                                       getbranchadd.setBranchname(a.getName());
+                                                       getbranchadd.setBranchaddress(a.getAddress());
+                                                       getbranch.add(getbranchadd);
+
+                                                   }
+
+                                                   SpinnerTextAdapter spinnerTextAdapterday = new SpinnerTextAdapter(context, getbranch);
+                                                   spBranchUser.setAdapter(spinnerTextAdapterday);
+                                                   spBranchUser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                       @Override
+                                                       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                                           GetBranchAdmin.BranchBean branchBean = response.body().getBranch().get(position);
+                                                           branchid = branchBean.getId();
+                                                       }
+
+                                                       @Override
+                                                       public void onNothingSelected(AdapterView<?> parent) {
+
+                                                       }
+                                                   });
+
+                                               } else {
+                                                   myApplication.hideDialog();
+
+                                                   Toast.makeText(context, "Somthing worng", Toast.LENGTH_SHORT).show();
+                                               }
+
+
+                                           }
+                                       }
+
+                                       @Override
+                                       public void onFailure(Call<GetBranchAdmin> call, Throwable t) {
+                                           myApplication.hideDialog();
+
+                                           Toast.makeText(context, "No Internet Accesss", Toast.LENGTH_SHORT).show();
+                                       }
+                                   }
+
+        );
+
+    }
 
 }
 

@@ -44,14 +44,7 @@ public class Branch_Adapter extends RecyclerView.Adapter<Branch_Adapter.ViewHold
         viewHolder.branchname.setText(data.getBranchname());
         viewHolder.branchaddress.setText(data.getBranchaddress());
 
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-//                Intent intent = new Intent(context,Pain_Activity1.class);
-//                context.startActivity(intent);
-            }
-        });
     }
 
     @Override

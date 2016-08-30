@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:gravity="left"
             android:text="Product Name"
             android:textColor="#FFFFFF"
@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="left"
             android:text="$ Price"
             android:textColor="#FFFFFF"
@@ -55,7 +55,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:text="Delete"
             android:textColor="#FFFFFF"

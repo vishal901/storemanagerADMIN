@@ -31,10 +31,10 @@ public class HomeFragment extends Fragment {
     CircularProgressBar c3;
 
     PreferenceHelper preferenceHelper;
-    @Bind(R.id.txt_no_coupan)
-    TextView txtNoCoupan;
-    @Bind(R.id.txt_no_product)
-    TextView txtNoProduct;
+//    @Bind(R.id.txt_no_coupan)
+//    TextView txtNoCoupan;
+//    @Bind(R.id.txt_no_product)
+//    TextView txtNoProduct;
     private String Apikey;
     private MyApplication myApplication;
 
@@ -88,8 +88,8 @@ public class HomeFragment extends Fragment {
 
                         c3.setProgress(Integer.parseInt(response.body().getData().getNoSells()));
                         c3.setTitle((response.body().getData().getNoSells()));
-                        txtNoCoupan.setText(response.body().getData().getNoCoupon());
-                        txtNoProduct.setText(response.body().getData().getNoProduct());
+//                        txtNoCoupan.setText(response.body().getData().getNoCoupon());
+//                        txtNoProduct.setText(response.body().getData().getNoProduct());
 
 
                     } else {
