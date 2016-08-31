@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
+import android.util.MalformedJsonException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,9 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
     private MyApplication myApplication;
     private ArrayList<branch> getbranch;
     private String branchid;
+    private String branchname;
+    private ArrayList<user> userArrayList= new ArrayList<>();
+
     public GetStroeManager_Adapter(Context context, List<user> countries) {
         this.countries = countries;
         this.context = context;
@@ -70,6 +74,8 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
         apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY, "");
         myApplication = MyApplication.getInstance();
         myApplication.createDialog((Activity) context, false);
+
+        ApiClient.showLog("apikey",apikey);
     }
 
     @Override
@@ -132,7 +138,7 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
                 mypos = viewHolder.getAdapterPosition();
 
                 //// TODO: 8/30/2016 update store manager reming
-              // update_user(data.getId_user(), apikey, mypos, data.getUsername(), data.getUserbranch());
+               update_user(data.getId_user(), apikey, mypos, data.getUsername(), data.getUserbranch());
             }
         });
     }
@@ -245,7 +251,7 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
                 sPassword = edtPassword.getText().toString().trim();
                 sConfingpasswod = edtConfimPassword.getText().toString().trim();
 
-                Update_User_Network_Call(sUsername, sPassword, apikey, mypos,branchid,user_id);
+                Update_User_Network_Call(sUsername, sPassword, apikey, mypos,branchid,user_id,branchname);
 
 
             }
@@ -253,7 +259,7 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
     }
 
     //// TODO: 8/29/2016 update user
-    private void Update_User_Network_Call(final String sUsername, String sPassword, String apikey, int mypos, final String branchid, String user_id) {
+    private void Update_User_Network_Call(final String sUsername, String sPassword, String apikey, final int mypos, final String branchid, final String user_id, final String branchname) {
 
         progressBar.setVisibility(View.VISIBLE);
        // btnsaveproduct.setEnabled(false);
@@ -264,6 +270,7 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
             @Override
             public void onResponse(Call<UpdateUser> call, Response<UpdateUser> response) {
 
+                ApiClient.showLog("code",""+response.code());
                 if (response.code() == 200){
 
                     progressBar.setVisibility(View.GONE);
@@ -273,9 +280,15 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
 
                         Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
+                        countries.remove(mypos);
                         user userdata = new user();
                         userdata.setUsername(sUsername);
-                        userdata.setUserbranch(branchid);
+                        userdata.setUserbranch(branchname);
+                        userdata.setId_user(user_id);
+
+                        userArrayList.add(userdata);
+                        countries.add(mypos,userdata);
+                        notifyDataSetChanged();
 //
 //                        productdata.remove(mypos);
 //                        product productlist = new product();
@@ -379,6 +392,8 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
 
                                                            GetBranchAdmin.BranchBean branchBean = response.body().getBranch().get(position);
                                                            branchid = branchBean.getId();
+                                                           branchname = branchBean.getName();
+                                                           System.out.println(branchBean.getId()+ branchBean.getName());
                                                        }
 
                                                        @Override

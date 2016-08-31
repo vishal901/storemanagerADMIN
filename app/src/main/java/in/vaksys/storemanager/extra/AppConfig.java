@@ -30,6 +30,7 @@ public class AppConfig {
     public static final String URL_GET_ORDER_LIST = "orders/get_orders";
     public static final String URL_GET_ORDER_LIST_ID = "orders/get_order_by_id";
     public static final String URL_UPDATE_COUPAN = "coupon/update_coupon";
+    public static final String URL_UPDATE_USER = "users/update";
 
 
 

@@ -69,7 +69,7 @@ public interface ApiInterface {
                                             @Header("Authorization") String auuth);
 
     @FormUrlEncoded
-    @POST(AppConfig.URL_CREATE_USER)
+    @POST(AppConfig.URL_UPDATE_USER)
     Call<UpdateUser> UPDATE_USER_RESPONSE_CALL(@Field("id") String username,
                                                @Field("username") String password,
                                                @Field("branch") String abc,
