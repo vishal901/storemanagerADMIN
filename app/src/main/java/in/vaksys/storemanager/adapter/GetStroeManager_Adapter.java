@@ -106,7 +106,12 @@ public class GetStroeManager_Adapter extends RecyclerView.Adapter<GetStroeManage
             @Override
             public void onClick(View v) {
 
+
+
                 id = data.getId_user();
+
+                ApiClient.showLog("user id",id);
+
                 mypos = viewHolder.getAdapterPosition();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                 alertDialogBuilder.setTitle("Sure Want to Delete this User??")

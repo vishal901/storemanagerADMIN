@@ -139,6 +139,27 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_update_order"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="60dp"
+                    android:layout_height="35dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Edit" />
+                <Button
+                    android:id="@+id/btn_delete_order"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="80dp"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="35dp"
+                    android:text="Delete" />
+            </LinearLayout>
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

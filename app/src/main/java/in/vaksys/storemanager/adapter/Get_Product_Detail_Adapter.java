@@ -24,8 +24,6 @@ public class Get_Product_Detail_Adapter extends RecyclerView.Adapter<Get_Product
     public Get_Product_Detail_Adapter(Context context, List<product> countries) {
         this.countries = countries;
         this.context = context;
-
-
     }
 
     @Override

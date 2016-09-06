@@ -54,7 +54,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
     private EditText edtcoupanname, edtcoupanprice;
     private Button btnsavecoupan;
     ProgressBar progressBar;
-    private String scoupanname, scoupanprice, branch_id;
+    private String scoupanname, scoupanprice, branch_id,type;
     private MyApplication myApplication;
 
     public Get_Coupan_List_Adapter(Context context, List<coupan> countries) {
@@ -64,6 +64,7 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
         preferenceHelper = new PreferenceHelper(context, "type");
         apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY, "");
         branch_id = preferenceHelper.LoadStringPref(AppConfig.PREF_BRANCH_ID, "");
+        type  =preferenceHelper.LoadStringPref(AppConfig.PREF_USER_TYPE,"");
         myApplication = MyApplication.getInstance();
         myApplication.createDialog((Activity) context, false);
     }
@@ -82,6 +83,13 @@ public class Get_Coupan_List_Adapter extends RecyclerView.Adapter<Get_Coupan_Lis
         viewHolder.coupan_no.setText(data.getCoupan_id());
         viewHolder.coupanname.setText(data.getCoupan_name());
         viewHolder.coupanprice.setText("\u0024"+data.getCoupan_price());
+
+        if (type.equalsIgnoreCase("1")) {
+            //admin login
+            viewHolder.img_delete.setEnabled(false);
+            viewHolder.img_edit.setEnabled(false);
+
+        }
 
         viewHolder.img_delete.setOnClickListener(new View.OnClickListener() {
             @Override

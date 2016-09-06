@@ -44,15 +44,18 @@ public class ListViewProductAdapter extends BaseAdapter {
     private AdapterProductCallback mAdapterCallback;
     PreferenceHelper preferenceHelper;
 
-    public ListViewProductAdapter(Fragment fragment,
+    public ListViewProductAdapter(Context mContext,
                                   List<product> worldpopulationlist) {
-        mContext = MyApplication.getInstance();
+
+        this.mContext = mContext;
+
+        this.mContext = MyApplication.getInstance();
         this.worldpopulationlist = worldpopulationlist;
-        inflater = LayoutInflater.from(mContext);
+        inflater = LayoutInflater.from(this.mContext);
         this.arraylist = new ArrayList<product>();
         this.arraylist.addAll(worldpopulationlist);
         try {
-            this.mAdapterCallback = ((AdapterProductCallback) fragment);
+            this.mAdapterCallback = ((AdapterProductCallback) mContext);
         } catch (ClassCastException e) {
             throw new ClassCastException("Fragment must implement AdapterCallback.");
         }

@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/toolbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layout_hide_order"
+            android:id="@+id/layout_hide_order1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -40,7 +41,7 @@
 
 
                     <EditText
-                        android:id="@+id/edt_select_customer_name"
+                        android:id="@+id/edt_select_customer_name1"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_weight="4"
@@ -77,7 +78,7 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/edt_select_product_name"
+                        android:id="@+id/edt_select_product_name1"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_weight="4"
@@ -185,7 +186,7 @@
                     android:orientation="vertical">
 
                     <Spinner
-                        android:id="@+id/sp_coupons_order"
+                        android:id="@+id/sp_coupons_order1"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginRight="3dp" />
@@ -211,15 +212,14 @@
                     android:textSize="12sp" />
 
                 <EditText
-                    android:enabled="true"
-                    android:id="@+id/edt_total_orderdetils"
+                    android:enabled="false"
+                    android:id="@+id/edt_total_orderdetils1"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="4"
                     android:background="@drawable/btn_ractangle_border"
                     android:digits="0123456789"
                     android:ems="10"
-                    android:hint="5000"
                     android:inputType="number"
                     android:paddingLeft="15dp"
                     android:textSize="12sp" />
@@ -259,7 +259,7 @@
                     android:orientation="vertical">
 
                     <Spinner
-                        android:id="@+id/sp_payment_order"
+                        android:id="@+id/sp_payment_order1"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginRight="3dp" />
@@ -278,7 +278,7 @@
 
 
                 <Button
-                    android:id="@+id/btn_edit_orderdetils"
+                    android:id="@+id/btn_edit_orderdetils1"
                     style="@style/btnbeckground"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

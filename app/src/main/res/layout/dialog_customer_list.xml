@@ -7,36 +7,27 @@
 
 
     <EditText
-        android:id="@+id/et_search_product"
+        android:id="@+id/et_search1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:drawablePadding="10dp" />
 
-    <ListView
-        android:id="@+id/list_product"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rec_customer_list1"
         android:layout_width="match_parent"
-        android:background="#e6e3e3"
-        android:layout_height="300dp"
-        android:layout_below="@+id/et_search_product"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/et_search1" />
 
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pb_productlist_data"
-        android:visibility="visible"
+        android:id="@+id/pb_customerlist_data1"
+        android:visibility="gone"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        style="@style/btnbeckground"
-        android:id="@+id/btn_save"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/list_product" />
 
 
 </RelativeLayout>

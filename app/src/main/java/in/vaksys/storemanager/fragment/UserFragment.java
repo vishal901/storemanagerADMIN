@@ -68,7 +68,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     private String apikey;
     PreferenceHelper preferenceHelper;
     private String branchid;
-    private List<user> addbranch;
+    private List<user> addUserList;
     private GetStroeManager_Adapter adapter;
     private MyApplication myApplication;
 
@@ -218,7 +218,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                     if (!response.body().isError()) {
 
-                        addbranch = new ArrayList<user>();
+                        addUserList = new ArrayList<user>();
 
                         for (getstoremanagerlist.DataBean a : as) {
 
@@ -226,13 +226,13 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             data.setId_user((a.getId()));
                             data.setUsername(a.getUsername());
                             data.setUserbranch(a.getBranchName());
-                            addbranch.add(data);
+                            addUserList.add(data);
 
                         }
                         recGetUser.addItemDecoration(new DividerItemDecoration(getActivity()));
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
                         recGetUser.setLayoutManager(layoutManager);
-                        adapter = new GetStroeManager_Adapter(getActivity(), addbranch);
+                        adapter = new GetStroeManager_Adapter(getActivity(), addUserList);
                         recGetUser.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
 

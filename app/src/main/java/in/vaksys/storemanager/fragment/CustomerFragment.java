@@ -1,9 +1,8 @@
 package in.vaksys.storemanager.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,21 +19,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.pinball83.maskededittext.MaskedEditText;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import belka.us.androidtoggleswitch.widgets.BaseToggleSwitch;
 import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import in.vaksys.storemanager.R;
-import in.vaksys.storemanager.activity.AddCustomerActivity;
 import in.vaksys.storemanager.adapter.CustomerList_Adapter;
-import in.vaksys.storemanager.adapter.GetStroeManager_Adapter;
 import in.vaksys.storemanager.adapter.SpinnerFindusAdapter;
 import in.vaksys.storemanager.adapter.SpinnerTextAdapterstatic;
 import in.vaksys.storemanager.extra.ApiClient;
@@ -42,13 +45,13 @@ import in.vaksys.storemanager.extra.ApiInterface;
 import in.vaksys.storemanager.extra.AppConfig;
 import in.vaksys.storemanager.extra.DividerItemDecoration;
 import in.vaksys.storemanager.extra.MyApplication;
+import in.vaksys.storemanager.extra.PhoneNumberTextWatcher;
 import in.vaksys.storemanager.extra.PreferenceHelper;
 import in.vaksys.storemanager.model.customerlist;
 import in.vaksys.storemanager.model.findus;
 import in.vaksys.storemanager.response.FindAs;
 import in.vaksys.storemanager.response.GetCustomerList;
 import in.vaksys.storemanager.response.RegisterResponse;
-import in.vaksys.storemanager.response.getstoremanagerlist;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,24 +65,39 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
     RecyclerView recGetCustomerlist;
     @Bind(R.id.pb_get_customerlist)
     ProgressBar pbGetCustomerlist;
+    @Bind(R.id.btn_export_customer)
+    Button btnExportCustomer;
     private Dialog dialog;
     @Bind(R.id.fab_customer)
     FloatingActionButton fabCustomer;
     ArrayList<customerlist> customerlistArrayList;
     private CustomerList_Adapter customerList_adapter;
-    private String apikey,user_type,branchid;
+    private String apikey, user_type, branchid;
     PreferenceHelper preferenceHelper;
-    private EditText edtFirstNameUser, edtLastNameUser, edtAddressUser, edtEmailUser,edtOtherWriteUser;
-    private String user_fname, user_gender, user_adddress, user_phone, user_email;
-    private ArrayList<String> day, month, year, state;
-    Spinner spDay,spMonth,spYear,spsourc;
+    private EditText edtFirstNameUser, edtPhone, edtLastNameUser, edtAddressUser, edtEmailUser, edtOtherWriteUser, edtZipcode, edtLandlineUser, edtAddress1User;
+    Spinner spDay, spMonth, spYear, spsourc;
     private ArrayList<findus> sourc;
     ToggleSwitch toggleMaleFemale;
     private String malefemale = "MALE";
     Button btnEditCustomer;
+    Spinner spState, spCity;
     private ProgressBar progressBar2;
     private MyApplication myApplication;
-    private MaskedEditText maskedEditText_phone,maskedEditText_landline;
+    private ArrayList<String> day, month, year, state, city;
+    private String st_day, st_month, st_yr, st_city, st_state, user_dob, user_city, user_state, user_fname, user_gender, user_adddress, user_phone, user_email, st_dob;
+    private String st_findus_word = "";
+    private String st_address2 = "";
+    private String st_lastname = "";
+    private String st_findustitle = "";
+    private String st_zip = "";
+    private String st_landline = "";
+
+    private static final String IMAGE_DIRECTORY_NAME = "StoreManager";
+    public static String timeStamp;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    private File mediaFile;
+    private List<String[]> data = new ArrayList<>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,11 +108,11 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         myApplication = MyApplication.getInstance();
         myApplication.createDialog(getActivity(), false);
 
-        preferenceHelper = new PreferenceHelper(getActivity(),"type");
-        apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY,"");
+        preferenceHelper = new PreferenceHelper(getActivity(), "type");
+        apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY, "");
         user_type = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_TYPE, "");
-        branchid = preferenceHelper.LoadStringPref(AppConfig.PREF_BRANCH_ID,"");
-        ApiClient.showLog("key",apikey);
+        branchid = preferenceHelper.LoadStringPref(AppConfig.PREF_BRANCH_ID, "");
+        ApiClient.showLog("key", apikey);
 
         if (user_type.equalsIgnoreCase("0")) {
             //admin login
@@ -103,12 +121,87 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         }
 
         fabCustomer.setOnClickListener(this);
+        btnExportCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                exportData();
+
+
+            }
+        });
 
         GetCustomerList_Network_Call();
 
         return rootView;
 
 
+    }
+
+    private void exportData() {
+
+
+
+
+        if (customerlistArrayList.size() > 0) {
+
+
+            try {
+
+                myApplication.DialogMessage("Loading...");
+                myApplication.showDialog();
+
+                File mediaStorageDir = new File(
+                        Environment
+                                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                        IMAGE_DIRECTORY_NAME);
+
+                // Create the storage directory if it does not exist
+                if (!mediaStorageDir.exists()) {
+                    if (!mediaStorageDir.mkdirs()) {
+                        // MyApplication.getInstance().showLog("TAG", "Oops! Failed create " + IMAGE_DIRECTORY_NAME + " directory");
+
+                    }
+                }
+
+                timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                        Locale.getDefault()).format(new Date());
+
+
+                mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                        + "file_" + timeStamp + ".csv");
+                CSVWriter writer = new CSVWriter(new FileWriter(mediaFile));
+
+
+                for (customerlist s : customerlistArrayList) {
+
+                    data.add(new String[]{s.getCustomer_id(), s.getCustomername(), s.getCustomercontactno(),s.getCustomeraddress(), s.getCity()});
+//                   data.add(new String[]{ s.getCity()});
+//                   data.add(new String[]{s.getContactId()});
+
+                }
+                writer.writeAll(data);
+                writer.close();
+
+
+                Toast.makeText(getActivity(), "Export Successfully Show File "+mediaFile, Toast.LENGTH_SHORT).show();
+                System.out.println("*** Also wrote this information to file: " + mediaFile);
+
+                myApplication.hideDialog();
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+                myApplication.hideDialog();
+            }
+
+
+        } else {
+            myApplication.hideDialog();
+            Toast.makeText(getActivity(), "No Data Found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void GetCustomerList_Network_Call() {
@@ -123,23 +216,38 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                 ApiClient.showLog("code", "" + response.code());
                 if (response.code() == 200) {
                     pbGetCustomerlist.setVisibility(View.GONE);
-                  List<GetCustomerList.DataBean> as = response.body().getData();
+                    List<GetCustomerList.DataBean> as = response.body().getData();
                     if (!response.body().isError()) {
 
                         customerlistArrayList = new ArrayList<customerlist>();
                         for (GetCustomerList.DataBean a : as) {
 
-                            ApiClient.showLog("data",a.getFirstName());
+                            ApiClient.showLog("data", a.getFirstName());
 
                             customerlist data = new customerlist();
+
+                            System.out.println(a.getId());
+
                             data.setCustomer_id(a.getId());
                             data.setCustomername((a.getFirstName()));
                             data.setCustomeraddress(a.getAddress());
                             data.setCustomergender(a.getGender());
                             data.setCustomercontactno(a.getMobile());
-                            data.setCustomeraliment(a.getEmail());
+                            data.setCustomeremail(a.getEmail());
+                            data.setDob(a.getDateOfBirth());
+                            data.setFindus(a.getHowDidYouFindUs());
                             //// TODO: 8/27/2016 add new aliments
-                            data.setCustomer_id(a.getAilments());
+
+                            data.setCustomeraliment(a.getAilments());
+
+                            data.setLastname(a.getLastName());
+                            data.setAddress2(a.getAddress1());
+                            data.setZipcode(a.getZip());
+                            data.setCity(a.getCity());
+                            data.setState(a.getState());
+                            data.setLandline(a.getLandline());
+                            data.setFindusreason(a.getFindUsReason());
+
                             customerlistArrayList.add(data);
 
                         }
@@ -150,7 +258,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                         recGetCustomerlist.setAdapter(customerList_adapter);
                         customerList_adapter.notifyDataSetChanged();
 
-                    }else {
+                    } else {
 
                         Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -182,26 +290,42 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
 
         dialog = new Dialog(getActivity());
         dialog.setTitle("Add Customer");
-        dialog.setContentView(R.layout.dailog_add_customer);
+        dialog.setContentView(R.layout.dailog_add_customer_new);
         dialog.show();
         findas_network_call();
 
 
         edtFirstNameUser = (EditText) dialog.findViewById(R.id.edt_fname_user);
         edtAddressUser = (EditText) dialog.findViewById(R.id.edt_address_user);
-        maskedEditText_phone = (MaskedEditText) dialog.findViewById(R.id.edt_mobile_user);
+        edtPhone = (EditText) dialog.findViewById(R.id.edt_mobile_user);
         edtEmailUser = (EditText) dialog.findViewById(R.id.edt_email_user);
-        toggleMaleFemale  = (ToggleSwitch) dialog.findViewById(R.id.toggle_male_female);
+        toggleMaleFemale = (ToggleSwitch) dialog.findViewById(R.id.toggle_male_female);
         edtOtherWriteUser = (EditText) dialog.findViewById(R.id.edt_other_write_user);
         btnEditCustomer = (Button) dialog.findViewById(R.id.btn_submit_newmember);
+
+
+        edtZipcode = (EditText) dialog.findViewById(R.id.edt_zipcode);
+        edtLandlineUser = (EditText) dialog.findViewById(R.id.edt_landline_user);
+        edtAddress1User = (EditText) dialog.findViewById(R.id.edt_address1_user);
+        edtLastNameUser = (EditText) dialog.findViewById(R.id.edt_lname_user);
+
 
         spDay = (Spinner) dialog.findViewById(R.id.sp_day);
         spMonth = (Spinner) dialog.findViewById(R.id.sp_month);
         spYear = (Spinner) dialog.findViewById(R.id.sp_Year);
         spsourc = (Spinner) dialog.findViewById(R.id.sp_source);
+        spCity = (Spinner) dialog.findViewById(R.id.sp_city);
+        spState = (Spinner) dialog.findViewById(R.id.sp_state);
         progressBar2 = (ProgressBar) dialog.findViewById(R.id.pb_add_customer_detail);
+//        st_zip = edtZipcode.getText().toString();
+//        st_landline = edtLandlineUser.getText().toString();
+//        st_findus_word = edtOtherWriteUser.getText().toString();
+//        st_address2 = edtAddress1User.getText().toString();
+//        st_lastname = edtLastNameUser.getText().toString();
+//
 
-
+        edtPhone.addTextChangedListener(new PhoneNumberTextWatcher(edtPhone));
+        edtLandlineUser.addTextChangedListener(new PhoneNumberTextWatcher(edtLandlineUser));
 
 
         toggleMaleFemale.setCheckedTogglePosition(0);
@@ -236,19 +360,103 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             year.add(Integer.toString(i));
         }
 
+        city = new ArrayList<>();
+
+        city.add("Select City");
+        city.add("Mehsana");
+        city.add("Gandhinagar");
+        city.add("Ahmedabad");
+
+        state = new ArrayList<>();
+        state.add("Select State");
+        state.add("Gujarat");
+        state.add("Panjab");
 
         SpinnerTextAdapterstatic spinnerTextAdapterday = new SpinnerTextAdapterstatic(getActivity(), day);
         // attaching data adapter to spinner
         spDay.setAdapter(spinnerTextAdapterday);
 
+
+        spDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                st_day = ((TextView) view.findViewById(R.id.spin_text)).getText().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         SpinnerTextAdapterstatic spinnerTextAdaptermonth = new SpinnerTextAdapterstatic(getActivity(), month);
         // attaching data adapter to spinner
         spMonth.setAdapter(spinnerTextAdaptermonth);
+
+        spMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                st_month = ((TextView) view.findViewById(R.id.spin_text)).getText().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         SpinnerTextAdapterstatic spinnerTextAdapteryr = new SpinnerTextAdapterstatic(getActivity(), year);
         // attaching data adapter to spinner
         spYear.setAdapter(spinnerTextAdapteryr);
 
+        spYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                st_yr = ((TextView) view.findViewById(R.id.spin_text)).getText().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        SpinnerTextAdapterstatic spinnerTextAdaptercity = new SpinnerTextAdapterstatic(getActivity(), city);
+        // attaching data adapter to spinner
+        spCity.setAdapter(spinnerTextAdaptercity);
+
+        spCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                st_city = ((TextView) view.findViewById(R.id.spin_text)).getText().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        SpinnerTextAdapterstatic spinnerTextAdapterstate = new SpinnerTextAdapterstatic(getActivity(), state);
+        // attaching data adapter to spinner
+        spState.setAdapter(spinnerTextAdapterstate);
+
+        spState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                st_state = ((TextView) view.findViewById(R.id.spin_text)).getText().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         btnEditCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -267,14 +475,48 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
 
+                st_dob = st_yr + "-" + st_day + "-" + st_month;
+                if (st_dob.equalsIgnoreCase("1910-1-1")) {
+
+                    user_dob = "";
+                } else {
+
+                    user_dob = st_dob;
+                }
+//----------------------------------------------------------------------
+
+                if (st_city.equalsIgnoreCase("Select City")) {
+
+                    user_city = "";
+
+                } else {
+                    user_city = st_city;
+                }
+
+//------------------------------------------------------------------------
+                if (st_state.equalsIgnoreCase("Select State")) {
+
+                    user_state = "";
+
+                } else {
+                    user_state = st_state;
+                }
+
+//-------------------------------------------------------------------------
+
+                st_zip = edtZipcode.getText().toString();
+                st_landline = edtLandlineUser.getText().toString();
+                st_findus_word = edtOtherWriteUser.getText().toString();
+                st_address2 = edtAddress1User.getText().toString();
+                st_lastname = edtLastNameUser.getText().toString();
+
                 user_fname = edtFirstNameUser.getText().toString();
                 user_adddress = edtAddressUser.getText().toString();
-                user_phone = maskedEditText_phone.getText().toString();
+                user_phone = edtPhone.getText().toString();
                 user_email = edtEmailUser.getText().toString();
 
 
-
-                customer_detail_call(branchid,user_fname,user_adddress,user_phone,user_email,malefemale);
+                customer_detail_call(branchid, user_fname, user_adddress, user_phone, user_email, malefemale);
 
 
             }
@@ -329,13 +571,15 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
 
                                     FindAs.DataBean aa = response.body().getData().get(position);
 
-                                    ApiClient.showLog("titel",aa.getTitle());
+                                    st_findustitle = aa.getTitle();
+
+                                    ApiClient.showLog("titel", aa.getTitle());
 
                                     if (aa.getTitle().equalsIgnoreCase("Other")) {
 
                                         edtOtherWriteUser.setVisibility(View.VISIBLE);
 
-                                    }else {
+                                    } else {
 
                                         edtOtherWriteUser.setVisibility(View.GONE);
                                     }
@@ -391,15 +635,16 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             return true;
         }
     }
+
     private boolean validateNumber() {
-        if (maskedEditText_phone.getText().toString().trim().isEmpty()) {
-            maskedEditText_phone.setError(getString(R.string.err_msg_number));
-            requestFocus(maskedEditText_phone);
+        if (edtPhone.getText().toString().trim().isEmpty()) {
+            edtPhone.setError(getString(R.string.err_msg_number));
+            requestFocus(edtPhone);
             return false;
         }
-        if (maskedEditText_phone.length() != 10) {
-            maskedEditText_phone.setError(getString(R.string.err_msg_valid_number));
-            requestFocus(maskedEditText_phone);
+        if (edtPhone.length() != 12) {
+            edtPhone.setError(getString(R.string.err_msg_valid_number));
+            requestFocus(edtPhone);
             return false;
         } else {
             return true;
@@ -434,7 +679,9 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         progressBar2.setVisibility(View.VISIBLE);
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<RegisterResponse> responseCall = apiInterface.REGISTER_RESPONSE_CALL(branchid,user_fname,malefemale,user_adddress,user_phone,user_email);
+        Call<RegisterResponse> responseCall = apiInterface.REGISTER_RESPONSE_CALL(branchid,
+                user_fname, malefemale, user_adddress, user_phone, user_email, "",
+                st_lastname, user_dob, st_address2, user_city, user_state, st_zip, st_findustitle, "", st_findus_word, st_landline);
 
         responseCall.enqueue(new Callback<RegisterResponse>() {
             @Override

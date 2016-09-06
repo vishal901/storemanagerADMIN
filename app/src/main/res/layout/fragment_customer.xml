@@ -92,7 +92,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayout3"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/btn_export_customer">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -103,5 +104,15 @@
         android:visibility="gone"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/btn_export_customer"
+        style="@style/btnbeckground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="export"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -49,7 +49,7 @@ public class CoupanFragment extends Fragment implements View.OnClickListener {
     private Dialog dialog;
     @Bind(R.id.fab_coupon)
     FloatingActionButton fabCoupon;
-    private String scoupanname, scoupanprice, branch_id, apikey;
+    private String scoupanname, scoupanprice, branch_id, apikey,user_type;
     private EditText edtcoupanname, edtcoupanprice;
     private Button btnsavecoupan;
     PreferenceHelper preferenceHelper;
@@ -67,8 +67,16 @@ public class CoupanFragment extends Fragment implements View.OnClickListener {
         preferenceHelper = new PreferenceHelper(getActivity(), "type");
         branch_id = preferenceHelper.LoadStringPref(AppConfig.PREF_BRANCH_ID, "");
         apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY, "");
+        user_type = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_TYPE, "");
 
         Get_Coupan_List(apikey);
+
+        if (user_type.equalsIgnoreCase("1")) {
+            //admin login
+            fabCoupon.setVisibility(View.GONE);
+
+        }
+
         fabCoupon.setOnClickListener(this);
 
 

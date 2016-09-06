@@ -9,10 +9,11 @@ import java.util.List;
  */
 public class GetCustomerList {
 
+
     /**
      * error : false
-     * message : Get Customer successfully.
-     * data : [{"id":"1","branch_id":"1","first_name":"milan","last_name":"soni","date_of_birth":"1990-12-08","gender":"MALE","address":"Ahmedabad","mobile":"7878225577","landline":"","email":"milan@vaksys.com","how_did_you_find_us":"GOOGLE","ailments":"asas","pain_picture":"https://google.com"}]
+     * message : Get Customers successfully.
+     * data : [{"id":"21","branch_id":"6","first_name":"vishal","last_name":"patel","date_of_birth":"0000-00-00","gender":"MALE","address":"address 1","address1":"address2","city":"Mehsana","state":"Gujarat","zip":"666666","mobile":"123456789012","landline":"123654789012","email":"vishal@gmail.com","how_did_you_find_us":"Other","ailments":"","pain_picture":null,"find_us_reason":"other data"},{"id":"22","branch_id":"6","first_name":"ankit","last_name":"patel","date_of_birth":"0000-00-00","gender":"MALE","address":"balol","address1":"balol","city":"Ahmedabad","state":"Gujarat","zip":"666666","mobile":"123456789089","landline":"","email":"visit@hkak.sjj","how_did_you_find_us":"Google","ailments":"","pain_picture":null,"find_us_reason":""}]
      */
 
     @SerializedName("error")
@@ -20,19 +21,24 @@ public class GetCustomerList {
     @SerializedName("message")
     private String message;
     /**
-     * id : 1
-     * branch_id : 1
-     * first_name : milan
-     * last_name : soni
-     * date_of_birth : 1990-12-08
+     * id : 21
+     * branch_id : 6
+     * first_name : vishal
+     * last_name : patel
+     * date_of_birth : 0000-00-00
      * gender : MALE
-     * address : Ahmedabad
-     * mobile : 7878225577
-     * landline :
-     * email : milan@vaksys.com
-     * how_did_you_find_us : GOOGLE
-     * ailments : asas
-     * pain_picture : https://google.com
+     * address : address 1
+     * address1 : address2
+     * city : Mehsana
+     * state : Gujarat
+     * zip : 666666
+     * mobile : 123456789012
+     * landline : 123654789012
+     * email : vishal@gmail.com
+     * how_did_you_find_us : Other
+     * ailments :
+     * pain_picture : null
+     * find_us_reason : other data
      */
 
     @SerializedName("data")
@@ -77,6 +83,14 @@ public class GetCustomerList {
         private String gender;
         @SerializedName("address")
         private String address;
+        @SerializedName("address1")
+        private String address1;
+        @SerializedName("city")
+        private String city;
+        @SerializedName("state")
+        private String state;
+        @SerializedName("zip")
+        private String zip;
         @SerializedName("mobile")
         private String mobile;
         @SerializedName("landline")
@@ -88,7 +102,9 @@ public class GetCustomerList {
         @SerializedName("ailments")
         private String ailments;
         @SerializedName("pain_picture")
-        private String painPicture;
+        private Object painPicture;
+        @SerializedName("find_us_reason")
+        private String findUsReason;
 
         public String getId() {
             return id;
@@ -146,6 +162,38 @@ public class GetCustomerList {
             this.address = address;
         }
 
+        public String getAddress1() {
+            return address1;
+        }
+
+        public void setAddress1(String address1) {
+            this.address1 = address1;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public String getZip() {
+            return zip;
+        }
+
+        public void setZip(String zip) {
+            this.zip = zip;
+        }
+
         public String getMobile() {
             return mobile;
         }
@@ -186,12 +234,20 @@ public class GetCustomerList {
             this.ailments = ailments;
         }
 
-        public String getPainPicture() {
+        public Object getPainPicture() {
             return painPicture;
         }
 
-        public void setPainPicture(String painPicture) {
+        public void setPainPicture(Object painPicture) {
             this.painPicture = painPicture;
+        }
+
+        public String getFindUsReason() {
+            return findUsReason;
+        }
+
+        public void setFindUsReason(String findUsReason) {
+            this.findUsReason = findUsReason;
         }
     }
 }

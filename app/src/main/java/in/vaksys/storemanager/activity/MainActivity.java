@@ -15,7 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import in.vaksys.storemanager.R;
+import in.vaksys.storemanager.extra.ApiClient;
 import in.vaksys.storemanager.extra.AppConfig;
 import in.vaksys.storemanager.extra.PreferenceHelper;
 import in.vaksys.storemanager.fragment.BranchFragment;
@@ -23,22 +27,27 @@ import in.vaksys.storemanager.fragment.CoupanFragment;
 import in.vaksys.storemanager.fragment.CustomerFragment;
 import in.vaksys.storemanager.fragment.FragmentDrawer;
 import in.vaksys.storemanager.fragment.HomeFragment;
+import in.vaksys.storemanager.fragment.OrderFragmentNew;
 import in.vaksys.storemanager.fragment.UserFragment;
 import in.vaksys.storemanager.fragment.OrderFragment;
 import in.vaksys.storemanager.fragment.ProductsFragment;
 import in.vaksys.storemanager.fragment.ReportsFragment;
+import in.vaksys.storemanager.model.EventData;
+import in.vaksys.storemanager.model.EventMsg;
 
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
     PreferenceHelper preferenceHelper;
+    private EventBus bus = EventBus.getDefault();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
 
+        bus.register(this);
         preferenceHelper = new PreferenceHelper(MainActivity.this,"type");
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -46,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         mToolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
 
         drawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
@@ -84,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 title = getString(R.string.coupan);
                 break;
             case 4:
-                fragment = new OrderFragment();
+                fragment = new OrderFragmentNew();
                 title = getString(R.string.order);
                 break;
 
@@ -127,6 +139,20 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             // set the toolbar title
             getSupportActionBar().setTitle(title);
         }
+    }
+
+
+    @Subscribe
+    public void onEvent(EventMsg eventMsg){
+
+        ApiClient.showLog("calling...","Callllllling");
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Unregister
+        bus.unregister(this);
+        super.onDestroy();
     }
 
 

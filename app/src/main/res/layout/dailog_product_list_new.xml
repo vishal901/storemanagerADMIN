@@ -7,36 +7,35 @@
 
 
     <EditText
-        android:id="@+id/et_search_product"
+        android:id="@+id/et_search_product1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="10dp" />
 
-    <ListView
-        android:id="@+id/list_product"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rec_product_list1"
         android:layout_width="match_parent"
-        android:background="#e6e3e3"
         android:layout_height="300dp"
-        android:layout_below="@+id/et_search_product"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/et_search_product1" />
 
     <ProgressBar
+        android:id="@+id/pb_productlist_data1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pb_productlist_data"
-        android:visibility="visible"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:visibility="gone" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
+        android:id="@+id/btn_save1"
         style="@style/btnbeckground"
-        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rec_product_list1"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/list_product" />
+        android:text="Save" />
 
 
 </RelativeLayout>

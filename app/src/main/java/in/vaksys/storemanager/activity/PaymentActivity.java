@@ -1,5 +1,6 @@
 package in.vaksys.storemanager.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -22,6 +25,8 @@ import in.vaksys.storemanager.extra.ApiClient;
 import in.vaksys.storemanager.extra.ApiInterface;
 import in.vaksys.storemanager.extra.AppConfig;
 import in.vaksys.storemanager.extra.PreferenceHelper;
+import in.vaksys.storemanager.model.EventData;
+import in.vaksys.storemanager.model.EventMsg;
 import in.vaksys.storemanager.model.product;
 import in.vaksys.storemanager.model.set_product_data;
 import in.vaksys.storemanager.response.Create_Order;
@@ -61,12 +66,14 @@ public class PaymentActivity extends AppCompatActivity {
     private String branchid, customer_id, coupanid, payid, productid, cname, cprice, total, paymentname;
     private String apikey;
     private String branch_id;
+    private EventBus eventBus = EventBus.getDefault();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remind_me);
         ButterKnife.bind(this);
+
 
         preferenceHelper = new PreferenceHelper(PaymentActivity.this, "type");
         apikey = preferenceHelper.LoadStringPref(AppConfig.PREF_USER_KEY, "");
@@ -156,7 +163,6 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void PlaceOrder_Network_Call(String apikey, String branchid, String customer_id, String productid, String coupanid, String total, String paymentname) {
 
-        //// TODO: 8/16/2016 errror 500 server errror php
 
         pbPayPayment.setVisibility(View.VISIBLE);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -172,6 +178,12 @@ public class PaymentActivity extends AppCompatActivity {
                     if (!response.body().isError()) {
                         pbPayPayment.setVisibility(View.GONE);
                         Toast.makeText(PaymentActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        eventBus.post(new EventMsg("msg"));
+                        Intent intent = new Intent(PaymentActivity.this,MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+
                     } else {
                         pbPayPayment.setVisibility(View.GONE);
                         Toast.makeText(PaymentActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();

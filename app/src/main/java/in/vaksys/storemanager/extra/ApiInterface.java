@@ -6,6 +6,7 @@ import in.vaksys.storemanager.response.AddProduct;
 import in.vaksys.storemanager.response.CreateBranchAdmin;
 import in.vaksys.storemanager.response.Create_Order;
 import in.vaksys.storemanager.response.DeleteCustomer;
+import in.vaksys.storemanager.response.DeleteOrder;
 import in.vaksys.storemanager.response.DeleteProduct;
 import in.vaksys.storemanager.response.DeleteUser;
 import in.vaksys.storemanager.response.FindAs;
@@ -118,6 +119,9 @@ public interface ApiInterface {
     @POST(AppConfig.URL_DELETE_COUPAN)
     Call<DeleteCustomer> DELETE_COUPAN_CALL(@Field("id") String id,@Header("Authorization") String auuth);
 
+    @FormUrlEncoded
+    @POST(AppConfig.URL_DELETE_ORDER)
+    Call<DeleteOrder> DELETE_ORDER_CALL(@Field("id") String id, @Header("Authorization") String auuth);
 
     @FormUrlEncoded
     @POST(AppConfig.URL_DELETE_PRODUCT)
@@ -137,7 +141,14 @@ public interface ApiInterface {
                                               @Field("last_name") String last_name,
                                               @Field("date_of_birth") String date_of_birth,
                                               @Field("landline") String landline,
-                                              @Field("how_did_you_find_us") String how_did_you_find_us, @Field("ailments") String ailments, @Field("pain_picture") String pain_picture);
+                                              @Field("how_did_you_find_us") String how_did_you_find_us,
+                                              @Field("ailments") String ailments,
+                                              @Field("pain_picture") String pain_picture,
+                                              @Field("address1") String address1,
+                                              @Field("city") String city,
+                                              @Field("state") String state,
+                                              @Field("zip") String zip,
+                                              @Field("find_us_reason") String find_us_reason);
 
 
     @GET(AppConfig.URL_GET_PRODUCT_LIST)
@@ -163,6 +174,7 @@ public interface ApiInterface {
                                                @Field("payment_method") String payment_method,
                                                @Header("Authorization") String auut);
 
+
     @FormUrlEncoded
     @POST(AppConfig.URL_REGISTER)
     Call<RegisterResponse> REGISTER_RESPONSE_CALL(@Field("branch_id") String branch_id,
@@ -170,11 +182,23 @@ public interface ApiInterface {
                                                   @Field("gender") String Gender,
                                                   @Field("address") String Address,
                                                   @Field("mobile") String mobile,
-                                                  @Field("email") String email);
+                                                  @Field("email") String email,
+                                                  @Field("ailments") String ailments,
+                                                  @Field("last_name") String last_name,
+                                                  @Field("date_of_birth") String date_of_birth,
+                                                  @Field("address1") String address1,
+                                                  @Field("city") String city,
+                                                  @Field("state") String state,
+                                                  @Field("zip") String zip,
+                                                  @Field("how_did_you_find_us") String how_did_you_find_us,
+                                                  @Field("pain_picture") String pain_picture,
+                                                  @Field("find_us_reason") String find_us_reason,
+                                                  @Field("landline") String landline);
 
 
     @GET(AppConfig.URL_GET_ORDER_LIST)
     Call<GetOrederList> GET_ORDER_LIST(@Header("Authorization") String auuth);
+
     @FormUrlEncoded
     @POST(AppConfig.URL_GET_ORDER_LIST_ID)
     Call<GetOrederListById> GET_ORDER_LIST_ID(@Field("order_id") String order_id, @Header("Authorization") String auuth);

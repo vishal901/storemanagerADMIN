@@ -20,9 +20,10 @@ public class AppConfig {
     public static final String URL_ADD_COUPON = "Coupon/create_coupon";
     public static final String URL_DELETE_CUSTOMER = "customer/delete_customer";
     public static final String URL_DELETE_BRANCH = "Branch/delete_branch";
-    public static final String URL_DELETE_USER = "Branch/delete_branch";
+    public static final String URL_DELETE_USER = "users/delete";
     public static final String URL_DELETE_PRODUCT = "product/delete_product";
     public static final String URL_DELETE_COUPAN = "coupon/delete_coupon";
+    public static final String URL_DELETE_ORDER= "Orders/delete_order";
     public static final String URL_EDIT_CUSTOMER = "customer/update_customer";
     public static final String URL_GET_PRODUCT_LIST = "Product/get_product";
     public static final String URL_GET_COUPAN_LIST = "coupon/get_coupon";

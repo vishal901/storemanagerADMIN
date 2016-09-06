@@ -66,23 +66,23 @@ import retrofit2.Response;
 public class OrderFragment extends Fragment implements AdapterCallback, AdapterProductCallback {
 
 
-    @Bind(R.id.sp_coupons_order)
+    @Bind(R.id.sp_coupons_order1)
     Spinner spCouponsOrder;
     @Bind(R.id.rec_set_productlist_data)
     RecyclerView recSetProductlistData;
-    @Bind(R.id.edt_select_customer_name)
+    @Bind(R.id.edt_select_customer_name1)
     EditText edtSelectCustomerName;
-    @Bind(R.id.edt_select_product_name)
+    @Bind(R.id.edt_select_product_name1)
     EditText edtSelectProductName;
-    @Bind(R.id.btn_edit_orderdetils)
+    @Bind(R.id.btn_edit_orderdetils1)
     Button btnEditOrderdetils;
     @Bind(R.id.edt_select_product_id)
     EditText edtSelectProductId;
-    @Bind(R.id.edt_total_orderdetils)
+    @Bind(R.id.edt_total_orderdetils1)
     EditText edtTotalOrderdetils;
-    @Bind(R.id.sp_payment_order)
+    @Bind(R.id.sp_payment_order1)
     Spinner spPaymentOrder;
-    @Bind(R.id.layout_hide_order)
+    @Bind(R.id.layout_hide_order1)
     LinearLayout layoutHideOrder;
     @Bind(R.id.rec_get_orderlist)
     RecyclerView recGetOrderlist;
@@ -92,7 +92,7 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
     RelativeLayout reletivieHide;
     private List<customerlist> customer, coupons, payment;
     private String apikey, customer_id, branchid, type;
-    PreferenceHelper preferenceHelper;
+        PreferenceHelper preferenceHelper;
     private List<product> addproductlist;
     private ArrayList<coupan> addcoupanlist;
     Dialog dialog;
@@ -240,6 +240,7 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+
             }
         });
 
@@ -336,45 +337,7 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
         });
 
 
-//        customer = new ArrayList<>();
-//
-//        customer.add("abc");
-//        customer.add("xyx");
-//        customer.add("rdfdf");
-//        customer.add("xydfdx");
-//        customer.add("xydfdx");
-//        ArrayAdapter arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, customer);
-//        spCustomerOrder.setAdapter(arrayAdapter);
 
-
-//
-//        product = new ArrayList<>();
-//        product.add("Abacavir Sulfate");
-//
-//        coupons = new ArrayList<>();
-//        coupons.add("Brufen 400");
-//
-//        payment = new ArrayList<>();
-//        payment.add("Cash");
-//        payment.add("Credit");
-//        payment.add("Paypal");
-
-
-//        SpinnerTextAdapter spinnerTextAdapterday = new SpinnerTextAdapter(getActivity(), customer);
-//        // attaching data adapter to spinner
-//        spCustomerOrder.setAdapter(spinnerTextAdapterday);
-//
-//        SpinnerTextAdapter spinnerTextAdapteryr = new SpinnerTextAdapter(getActivity(), product);
-//        // attaching data adapter to spinner
-//        spProductOrder.setAdapter(spinnerTextAdapteryr);
-//
-//        SpinnerTextAdapter spinnerTextAdapteryrsts = new SpinnerTextAdapter(getActivity(), coupons);
-//        // attaching data adapter to spinner
-//        spCouponsOrder.setAdapter(spinnerTextAdapteryrsts);
-//
-//        SpinnerTextAdapter spinnerTextAdapteryrs = new SpinnerTextAdapter(getActivity(), payment);
-//        // attaching data adapter to spinner
-//        spPaymentOrder.setAdapter(spinnerTextAdapteryrs);
 
 
     }
@@ -437,7 +400,6 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
                     // ApiClient.showLog("kjhujlbju", product.getProduct_name());
 
                     productdata productdata = new productdata();
-
                     productdata.setProduct_name(product.getProduct_name());
                     productdata.setProduct_id(product.getProduct_id());
                     productdata.setProduct_price(product.getProduct_price());
@@ -459,7 +421,7 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
                 //  edtSelectProductName.setText(setname);
                 ApiClient.showLog("sum", "" + sum);
 
-                edtTotalOrderdetils.setText("" + sum);
+                edtTotalOrderdetils.setText("" + sum+addsum);
 
 
                 if (productdatas.size() == 0) {
@@ -567,7 +529,7 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
 
                         }
 
-                        listViewAdapter = new ListViewAdapter(OrderFragment.this, customer);
+                    //    listViewAdapter = new ListViewAdapter(OrderFragment.this, customer);
                         list.setAdapter(listViewAdapter);
 
 
@@ -625,7 +587,7 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
 
                         }
 
-                        listViewProductAdapter = new ListViewProductAdapter(OrderFragment.this, addproductlist);
+                     //   listViewProductAdapter = new ListViewProductAdapter(OrderFragment.this, addproductlist);
                         listproduct.setAdapter(listViewProductAdapter);
 
                         //    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -795,7 +757,7 @@ public class OrderFragment extends Fragment implements AdapterCallback, AdapterP
     @Subscribe
     public void onEvent(EventData messageCar) {
         changePrice = messageCar.getData();
-        sum = sum - changePrice + addsum;
+        sum = sum - changePrice ;
         edtTotalOrderdetils.setText(String.valueOf(sum));
     }
 
