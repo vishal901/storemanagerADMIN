@@ -98,7 +98,6 @@ public class OrderFragmentNew extends Fragment implements View.OnClickListener {
                             getorederlistdata.setCoupan_count(a.getCouponCount());
                             getorederlistdata.setTotal(a.getOrderTotal());
                             getorederlistdata.setDate(a.getOrderDate());
-
                             getorederlists.add(getorederlistdata);
 
                         }

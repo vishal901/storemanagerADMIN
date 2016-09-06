@@ -78,6 +78,8 @@
     </LinearLayout>
 
     <ProgressBar
+        android:theme="@style/CircularProgress"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:id="@+id/pb_create_new_user_admin_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

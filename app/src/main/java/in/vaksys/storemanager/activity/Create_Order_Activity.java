@@ -118,6 +118,8 @@ public class Create_Order_Activity extends AppCompatActivity implements AdapterC
     private ArrayList<set_product_data> stringArrayList = new ArrayList<>();
 
     int total = 0;
+    private int product_sum = 0;
+    private int price_sum = 0;
 
 
     @Override
@@ -292,12 +294,19 @@ public class Create_Order_Activity extends AppCompatActivity implements AdapterC
                                 coupanname = aa.getCouponName();
                                 coupanprice = aa.getPrice();
 
+                                price_sum = Integer.parseInt(aa.getPrice());
+
+
+                                edt_setValue(price_sum,product_sum);
+
                                 addsum = sum + Integer.parseInt(aa.getPrice());
 
                                 // setvalue(addsum,sum);
                                 System.out.println("sum data" + addsum + sum);
 
-                                edtTotalOrderdetils1.setText("" + addsum);
+                            //    setdata(sum,Integer.parseInt(aa.getPrice()));
+
+                             //   edtTotalOrderdetils1.setText("" + addsum);
 
                             }
 
@@ -328,6 +337,22 @@ public class Create_Order_Activity extends AppCompatActivity implements AdapterC
                 Toast.makeText(Create_Order_Activity.this, "No Internet Accesss", Toast.LENGTH_SHORT).show();
             }
         });
+
+    }
+
+    private void edt_setValue(int price_sum, int product_sum) {
+
+        total = price_sum + product_sum;
+
+        edtTotalOrderdetils1.setText(""+total);
+    }
+
+    private void setdata(int sum, int spvalue) {
+
+        total = sum +spvalue;
+
+        edtTotalOrderdetils1.setText(""+total);
+
 
     }
 
@@ -512,6 +537,10 @@ public class Create_Order_Activity extends AppCompatActivity implements AdapterC
                     productdata.setProduct_name(product.getProduct_name());
                     productdata.setProduct_id(product.getProduct_id());
                     productdata.setProduct_price(product.getProduct_price());
+
+                    product_sum = Integer.parseInt(product.getProduct_price());
+
+
                     sum = sum + addsum + Integer.parseInt(product.getProduct_price());
 
                     productid = product.getProduct_id() + ",";
@@ -530,8 +559,11 @@ public class Create_Order_Activity extends AppCompatActivity implements AdapterC
                 //  edtSelectProductName.setText(setname);
                 ApiClient.showLog("sum", "" + sum);
 
-                //  setvalue(sum, sum);
-                edtTotalOrderdetils1.setText("" + sum);
+                System.out.println("product_sum"+product_sum);
+
+                edt_setValue(price_sum,product_sum);
+                // setdata(sum,product_sum);
+              //  edtTotalOrderdetils1.setText("" + sum);
 
 
                 if (productdatas.size() == 0) {
@@ -683,8 +715,8 @@ public class Create_Order_Activity extends AppCompatActivity implements AdapterC
     @Subscribe
     public void onEvent(EventData messageCar) {
         changePrice = messageCar.getData();
-        sum = sum - changePrice;
-        edtTotalOrderdetils1.setText(String.valueOf(sum));
+        total = total - changePrice;
+        edtTotalOrderdetils1.setText(String.valueOf(total));
     }
 
     @Subscribe

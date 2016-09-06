@@ -17,6 +17,7 @@ import java.util.List;
 
 import in.vaksys.storemanager.R;
 import in.vaksys.storemanager.activity.OrderList_Detail_Activity;
+import in.vaksys.storemanager.activity.UpdateOrderActivity;
 import in.vaksys.storemanager.extra.ApiClient;
 import in.vaksys.storemanager.extra.ApiInterface;
 import in.vaksys.storemanager.extra.AppConfig;
@@ -106,6 +107,16 @@ public class Get_Order_Adapter extends RecyclerView.Adapter<Get_Order_Adapter.Vi
                 alertDialog.show();
             }
         });
+
+
+        viewHolder.btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(context,UpdateOrderActivity.class);
+                context.startActivity(i);
+            }
+        });
     }
 
     private void DeleteOrder_Network_Call(String id, final int mypos, String apikey) {
@@ -120,7 +131,7 @@ public class Get_Order_Adapter extends RecyclerView.Adapter<Get_Order_Adapter.Vi
 
                 ApiClient.showLog("code", "" + response.code());
                 if (response.code() ==200){
-
+                    myApplication.hideDialog();
                     if (!response.body().isError()){
                         myApplication.hideDialog();
                         countries.remove(mypos);

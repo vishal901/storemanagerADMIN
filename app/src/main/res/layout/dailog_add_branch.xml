@@ -36,6 +36,8 @@
         android:textSize="12sp" />
 
     <ProgressBar
+        android:theme="@style/CircularProgress"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:id="@+id/pb_create_branch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

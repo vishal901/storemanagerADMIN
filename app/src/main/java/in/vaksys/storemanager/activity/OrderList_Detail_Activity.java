@@ -98,7 +98,7 @@ public class OrderList_Detail_Activity extends AppCompatActivity {
                     List<GetOrederListById.DataBean.ProductsBean> product = response.body().getData().getProducts();
 
                     if (!response.body().isError()) {
-
+                        myApplication.hideDialog();
                         for (GetOrederListById.DataBean.OrderBean aa : order) {
 
                             txtOrderidDetail.setText("Order Id:-" + "#" + aa.getId());
@@ -134,6 +134,7 @@ public class OrderList_Detail_Activity extends AppCompatActivity {
 
 
                     } else {
+                        myApplication.hideDialog();
                         Toast.makeText(OrderList_Detail_Activity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
                     }
@@ -151,5 +152,14 @@ public class OrderList_Detail_Activity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        myApplication.hideDialog();
+        finish();
     }
 }
